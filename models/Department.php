@@ -41,4 +41,24 @@ class Department extends \yii\db\ActiveRecord
             'name' => 'Name',
         ];
     }
+
+    public function getEmployees()
+    {
+        return $this->hasMany(Employee::className(), ['department_id' => 'id']);
+    }
+
+    public function beforeDelete()
+    {
+        parent::beforeDelete();
+        Employee::deleteAll(['department_id' => $this->id]);
+        return true;
+    }
+
+    public function extraFields()
+    {
+        $fields = parent::fields();
+        $fields[] = 'employees';
+        return $fields;
+    }
+
 }
